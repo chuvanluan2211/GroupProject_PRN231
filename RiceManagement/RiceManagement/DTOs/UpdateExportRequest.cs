@@ -1,8 +1,9 @@
 ﻿namespace RiceManagement.DTOs
 {
-    public class UpdateImportRequest
+    public class UpdateExportRequest
     {
-        public DateTime? ImportDate { get; set; }
+        public DateTime? ExportDate { get; set; }
+
         public int? Quantity { get; set; }
     }
 }

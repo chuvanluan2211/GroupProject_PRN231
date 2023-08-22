@@ -23,18 +23,25 @@ namespace RiceManagement.Controllers
             var getlist = _context.Imports.ToList();
             return Ok(getlist);
         }
-
-        // GET api/<ImportController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<IEnumerable<ImportRiceDetailResponse>>> GetDetail(int id)
         {
-            return "value";
+            var getlist = _context.ImportRiceDetails.Where(i => i.ImportId == id)
+                .Include(i => i.Rice).Select(o => new ImportRiceDetailResponse 
+                {
+                    ImportDetailId = o.ImportDetailId,
+                    ImportId = o.ImportId,
+                    Quantity = o.Quantity,
+                    RiceName = o.Rice.Name
+                }).ToList();
+            return Ok(getlist);
         }
+        
 
         // POST api/<ImportController>
-        [HttpPost("AddNew")]
-        public async Task<IActionResult> Post([FromBody] AddImportRequest import
-           )
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] AddImportRequest import)
+           
         {
             var addImport = new Import
             {
@@ -46,36 +53,42 @@ namespace RiceManagement.Controllers
             await _context.SaveChangesAsync();
             return Ok(addImport);
         }
+        [HttpPost("ImportDetail")]
+        public async Task<IActionResult> PostImport( [FromBody] AddImportRiceDetailRequest import)
 
-        // PUT api/<ImportController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] UpdateImportRequest import)
         {
-            var getImport = _context.Imports.SingleOrDefault(o => o.ImportId == id);
-            if (getImport == null)
+            var addImport = new ImportRiceDetail
             {
-                return BadRequest();
-            }
-            getImport.ImportDate = import.ImportDate;
-            getImport.Quantity = import.Quantity;
-
-            _context.Update(getImport);
+                ImportId = import.ImportId,
+                RiceId = import.RiceId,
+                Quantity = import.Quantity,
+            };
+            await _context.ImportRiceDetails.AddAsync(addImport);
             await _context.SaveChangesAsync();
-            return Ok(getImport);
+            return Ok(addImport);
         }
 
-        // DELETE api/<ImportController>/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+       
+        [HttpPut("ImportDetail/{id}/{id2}")]
+        public async Task<IActionResult> PutImport(int id, int id2 , [FromBody] ImportRiceDetailRequest import)
         {
-            var getImport = _context.Imports.SingleOrDefault(o => o.ImportId == id);
+            var getImportDetail = _context.ImportRiceDetails.SingleOrDefault(o => o.ImportId == id && 
+            o.RiceId == id2);
+            var getImport = _context.Imports.SingleOrDefault(i => i.ImportId == id);
+            int sum = (int)_context.ImportRiceDetails.Where(i => i.ImportId == id).Sum(o => o.Quantity);
+
             if (getImport == null)
             {
                 return BadRequest();
             }
-            _context.Remove(getImport);
-            _context.SaveChanges();
-            return Ok("xoa thanh cong");
+            getImportDetail.Quantity = import.Quantity;
+            getImport.Quantity = sum ;
+            getImport.ImportDate = import.ImportDate;
+            _context.Update(getImport);
+            _context.Update(getImportDetail);
+            await _context.SaveChangesAsync();
+            return StatusCode(200, "update thanh cong");
         }
+
     }
 }
