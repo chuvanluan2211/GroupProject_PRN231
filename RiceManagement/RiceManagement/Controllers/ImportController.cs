@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RiceManagement.DTOs;
 using RiceManagement.Models;
 
@@ -31,8 +32,9 @@ namespace RiceManagement.Controllers
         }
 
         // POST api/<ImportController>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddImportRequest import)
+        [HttpPost("AddNew")]
+        public async Task<IActionResult> Post([FromBody] AddImportRequest import
+           )
         {
             var addImport = new Import
             {
@@ -56,7 +58,6 @@ namespace RiceManagement.Controllers
             }
             getImport.ImportDate = import.ImportDate;
             getImport.Quantity = import.Quantity;
-            getImport.QuantityInStock = import.QuantityInStock;
 
             _context.Update(getImport);
             await _context.SaveChangesAsync();

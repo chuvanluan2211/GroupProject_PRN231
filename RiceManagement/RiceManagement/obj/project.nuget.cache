@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "dQVaZpuiFA9opXrOplqr1OOtACR6QDklOrSVZt8GFPvAr/8tHb1Kc1GkczWVq6DCeWo0RROdPp5oPm5ywCP2EA==",
+  "dgSpecHash": "dO6k/b8f2TIpb4s+1ukABsTfiIQGD+lMRtjvN2Hq93ogrizyL64FQG52p766g+4p+cQTB0927h/RED6BMWCZGQ==",
   "success": true,
-  "projectFilePath": "E:\\javaweb\\GroupProject_PRN231\\RiceManagement\\RiceManagement\\RiceManagement.csproj",
+  "projectFilePath": "E:\\Desktop\\GroupProject_PRN231\\RiceManagement\\RiceManagement\\RiceManagement.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\laptop 2019\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\laptop 2019\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

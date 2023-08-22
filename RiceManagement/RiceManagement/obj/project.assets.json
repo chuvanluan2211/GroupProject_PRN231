@@ -2168,11 +2168,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\javaweb\\GroupProject_PRN231\\RiceManagement\\RiceManagement\\RiceManagement.csproj",
+      "projectUniqueName": "E:\\Desktop\\GroupProject_PRN231\\RiceManagement\\RiceManagement\\RiceManagement.csproj",
       "projectName": "RiceManagement",
-      "projectPath": "E:\\javaweb\\GroupProject_PRN231\\RiceManagement\\RiceManagement\\RiceManagement.csproj",
+      "projectPath": "E:\\Desktop\\GroupProject_PRN231\\RiceManagement\\RiceManagement\\RiceManagement.csproj",
       "packagesPath": "C:\\Users\\laptop 2019\\.nuget\\packages\\",
-      "outputPath": "E:\\javaweb\\GroupProject_PRN231\\RiceManagement\\RiceManagement\\obj\\",
+      "outputPath": "E:\\Desktop\\GroupProject_PRN231\\RiceManagement\\RiceManagement\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\laptop 2019\\AppData\\Roaming\\NuGet\\NuGet.Config",
