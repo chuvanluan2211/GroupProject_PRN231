@@ -67,3 +67,8 @@ C:\Users\dell\Documents\GitHub\TEST\GroupProject_PRN231\RiceManagement\RiceManag
 C:\Users\dell\Documents\GitHub\TEST\GroupProject_PRN231\RiceManagement\RiceManagement\obj\Debug\net6.0\RiceManagement.pdb
 C:\Users\dell\Documents\GitHub\TEST\GroupProject_PRN231\RiceManagement\RiceManagement\obj\Debug\net6.0\RiceManagement.genruntimeconfig.cache
 C:\Users\dell\Documents\GitHub\TEST\GroupProject_PRN231\RiceManagement\RiceManagement\obj\Debug\net6.0\ref\RiceManagement.dll
+C:\Users\dell\Documents\GitHub\TEST\GroupProject_PRN231\RiceManagement\RiceManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\dell\Documents\GitHub\TEST\GroupProject_PRN231\RiceManagement\RiceManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\dell\Documents\GitHub\TEST\GroupProject_PRN231\RiceManagement\RiceManagement\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\dell\Documents\GitHub\TEST\GroupProject_PRN231\RiceManagement\RiceManagement\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
+C:\Users\dell\Documents\GitHub\TEST\GroupProject_PRN231\RiceManagement\RiceManagement\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
