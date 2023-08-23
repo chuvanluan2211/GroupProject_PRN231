@@ -57,12 +57,15 @@ namespace RiceManagement.Controllers
         public async Task<IActionResult> PostImport( [FromBody] AddImportRiceDetailRequest import)
 
         {
+            var getRice = _context.Rice.SingleOrDefault(i => i.RiceId == import.RiceId);
             var addImport = new ImportRiceDetail
             {
                 ImportId = import.ImportId,
                 RiceId = import.RiceId,
                 Quantity = import.Quantity,
             };
+            getRice.QuantityInStock += import.Quantity;
+            _context.Rice.Update(getRice);
             await _context.ImportRiceDetails.AddAsync(addImport);
             await _context.SaveChangesAsync();
             return Ok(addImport);
