@@ -19,7 +19,7 @@ namespace RiceManagement.Controllers
             _context = context;
         }
         [HttpGet("{month}/{year}")]
-        //[Authorize(Policy = "AdminRolePolicy")]
+        [Authorize(Policy = "AdminRolePolicy")]
         public ActionResult GetAll (string month,string year) {
             int parsedMonth = int.Parse(month);
             int parsedYear = int.Parse(year);
