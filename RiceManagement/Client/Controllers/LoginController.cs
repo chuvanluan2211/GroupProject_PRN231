@@ -42,7 +42,7 @@ namespace Client.Controllers
                     HttpContext.Session.SetString("Token", token);
                     // Hoặc HttpContext.Response.Cookies.Append("Token", token);
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Statistic");
                 }
             }
 
