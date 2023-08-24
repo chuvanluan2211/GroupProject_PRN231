@@ -46,7 +46,7 @@ namespace RiceManagement.Controllers
             var addImport = new Import
             {
                 ImportDate = import.ImportDate,
-                Quantity = import.Quantity,
+                Quantity = 0,
                 QuantityInStock = import.QuantityInStock,
             };
             await _context.Imports.AddAsync(addImport);
@@ -58,6 +58,8 @@ namespace RiceManagement.Controllers
 
         {
             var getRice = _context.Rice.SingleOrDefault(i => i.RiceId == import.RiceId);
+            var getImport = _context.Imports.SingleOrDefault(i => i.ImportId == import.ImportId);
+
             var addImport = new ImportRiceDetail
             {
                 ImportId = import.ImportId,
@@ -65,7 +67,10 @@ namespace RiceManagement.Controllers
                 Quantity = import.Quantity,
             };
             getRice.QuantityInStock += import.Quantity;
+            getImport.Quantity += import.Quantity;
             _context.Rice.Update(getRice);
+            _context.Imports.Update(getImport);
+
             await _context.ImportRiceDetails.AddAsync(addImport);
             await _context.SaveChangesAsync();
             return Ok(addImport);
@@ -93,5 +98,26 @@ namespace RiceManagement.Controllers
             return StatusCode(200, "update thanh cong");
         }
 
+        [HttpDelete]
+        public async Task<IActionResult> DeleteImport(int id)
+        {
+            var getEx = await _context.Imports.SingleAsync(i => i.ImportId == id);
+            if (getEx == null)
+            {
+                return BadRequest(" ko co export nay");
+            }
+            else
+            {
+                var getExportDetail = _context.ImportRiceDetails.Where(o => o.ImportId == id).ToList();
+
+                _context.ImportRiceDetails.RemoveRange(getExportDetail);
+                _context.Imports.Remove(getEx);
+
+                _context.SaveChanges();
+
+                return Ok("xoa thanh cong");
+
+            }
+        }
     }
 }

@@ -52,7 +52,7 @@ namespace RiceManagement.Controllers
                 var addExport = new Export
                 {
                     ExportDate = export.ExportDate,
-                    Quantity = export.Quantity,
+                    Quantity = 0,
                 };
                 await _context.Exports.AddAsync(addExport);
                 
@@ -65,6 +65,7 @@ namespace RiceManagement.Controllers
 
         {
             var getRice = _context.Rice.SingleOrDefault(i => i.RiceId == export.RiceId);
+            var getExport = _context.Exports.SingleOrDefault(i => i.ExprotId == export.ExportId);
             var getImportDetail = _context.ImportRiceDetails.Where(o => o.RiceId == export.RiceId ).ToList();
             int total = getImportDetail.Sum(i => i.Quantity).Value;
             for (int i = 0; i <  getImportDetail.Count ; i++)
@@ -81,24 +82,62 @@ namespace RiceManagement.Controllers
                     };
                     var getImport = _context.Imports.SingleOrDefault(i => i.ImportId == addExport.ImportId);
                     getImport.QuantityInStock -= export.Quantity;
-
+                    getExport.Quantity = export.Quantity;
                     getRice.QuantityInStock -= export.Quantity;
                     _context.Rice.Update(getRice);
                     _context.Imports.Update(getImport);
+                    _context.Exports.Update(getExport);
 
                     await _context.ExportDetails.AddAsync(addExport);
                     await _context.SaveChangesAsync();
                     return StatusCode(200, "add thanh cong");
                     break;
                 }
-                if(export.Quantity > total)
+                
+                else
                 {
-                    return StatusCode(400, "khong export qua gioi han: " + total);
+
+                    var addExport = new ExportDetail
+                    {
+                        ExportId = export.ExportId,
+                        ImportId = getImportDetail[i].ImportId,
+                        RiceId = export.RiceId,
+                        Quantity = export.Quantity,
+                    };
+                    var getImport = _context.Imports.SingleOrDefault(i => i.ImportId == addExport.ImportId);
+                    var getNextImport = _context.Imports.SingleOrDefault(i => i.ImportId == addExport.ImportId +1);
+                    int getImport1 = _context.ImportRiceDetails
+                        .Where(i => i.ImportId == addExport.ImportId && i.RiceId == addExport.RiceId )
+                        .Sum(o => o.Quantity).Value;
+
+                    int lastUnit = (int)(addExport.Quantity - getImportDetail[i].Quantity);
+
+                    getImport.QuantityInStock -= getImport1;
+                    getNextImport.QuantityInStock = getNextImport.QuantityInStock -lastUnit
+                       ;
+
+                    getRice.QuantityInStock -= export.Quantity;
+                    getExport.Quantity = export.Quantity;
+                    _context.Exports.Update(getExport);
+
+                    _context.Rice.Update(getRice);
+                    _context.Imports.Update(getImport);
+                    _context.Imports.Update(getNextImport);
+
+                    await _context.ExportDetails.AddAsync(addExport);
+                    await _context.SaveChangesAsync();
+                    return StatusCode(200, "add thanh cong");
+                    break;
                 }
                 
 
 
 
+            }
+            if (export.Quantity > total)
+            {
+
+                return StatusCode(400, "khong export qua gioi han: " + total);
             }
             return StatusCode(200);
 
@@ -123,6 +162,28 @@ namespace RiceManagement.Controllers
             _context.Update(getEx);
             await _context.SaveChangesAsync();
             return StatusCode(200, "update thanh cong");
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteExport(int id)
+        {
+            var getEx = await _context.Exports.SingleAsync(i => i.ExprotId==id);
+            if(getEx == null)
+            {
+                return BadRequest(" ko co export nay");
+            }
+            else
+            {
+                var getExportDetail =  _context.ExportDetails.Where(o => o.ExportId == id).ToList();
+
+                _context.ExportDetails.RemoveRange(getExportDetail);
+                _context.Exports.Remove(getEx);
+
+                _context.SaveChanges();
+
+                return Ok("xoa thanh cong");
+
+            }
         }
     }
 }
