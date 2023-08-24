@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RiceManagement.DTO;
 using RiceManagement.Models;
 using System.Data;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace RiceManagement.Controllers
 {
@@ -15,15 +18,50 @@ namespace RiceManagement.Controllers
         {
             _context = context;
         }
-        [HttpGet]
+        [HttpGet("{month}/{year}")]
         [Authorize(Policy = "AdminRolePolicy")]
-        public ActionResult GetAll () {
-            var imports = _context.Imports.ToList();
-            if(imports == null)
+        public ActionResult GetAll (string month,string year) {
+            var results = from import in _context.Imports
+                          join exportDetail in _context.ExportDetails on import.ImportId equals exportDetail.ImportId
+                          join export in _context.Exports on exportDetail.ExportId equals export.ExprotId
+                          where import.ImportDate.HasValue && export.ExportDate.HasValue &&
+                                import.ImportDate.Value.Month == 9 && export.ExportDate.Value.Year == 2023
+                          select new Statistic
+                          {
+                              ImportId = import.ImportId,
+                              ExportId = export.ExprotId,
+                              Date = import.ImportDate.ToString(),
+                             ImportQuantity= import.Quantity,
+                             QuantityInStock= import.QuantityInStock,
+                            ExportQuantity=  export.Quantity
+                          };
+
+
+
+            if (results == null)
             {
                 return NotFound();
             }
-            return Ok(imports);
+            return Ok(results);
+        }
+
+        [HttpGet("Details/{iID}/{eID}")]
+        
+        public IActionResult GetDetail(int iID,int eID)
+        {
+            var results = _context.ExportDetails.Include(x => x.Rice).Where(x => x.ImportId == iID && x.ExportId == eID).ToList();
+            if (results == null)
+            {
+                return NotFound();
+            }
+            var rs = results.Select(x => new StatisticDetails
+            {
+                RiceName = x.Rice.Name,
+                Quantity = x.Quantity
+            });
+
+           
+            return Ok(rs);
         }
 
     }
