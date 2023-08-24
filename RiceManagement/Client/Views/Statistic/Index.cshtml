@@ -1,0 +1,151 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model List<Statistic>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #555;
+        }
+
+        select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+
+            a:hover {
+                color: #0056b3;
+            }
+
+    </style>
+    <title>Thống kê số lượng gạo trong kho</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Statistic Table</h1>
+        <form asp-action="GetAllData" asp-controller="Statistic" method="post">
+        <label for="monthSelect">Month</label>
+        <select id="monthSelect" name="month">
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+
+            <!-- Sử dụng JavaScript để tạo danh sách các năm -->
+        </select>
+        <label for="yearSelect">Year</label>
+        <select id="yearSelect" name="year">
+            <option value="2023">2023</option>
+            <!-- Sử dụng JavaScript để tạo danh sách các năm -->
+        </select>
+        <button type="submit">Search</button>
+        </form>
+        @if (Model != null)
+        {
+            <table>
+                <tr>
+                <th>Date</th>
+                <th>QuantityInStock</th>
+                <th>Import</th>
+                <th>Export</th>
+                <th></th>
+            </tr>
+            @foreach(var item in Model){
+            <tr>
+                <td>@item.Date</td>
+                <td>@item.QuantityInStock</td>
+                <td>@item.ImportQuantity</td>
+                <td>@item.ExportQuantity</td>
+                 <td><a href="StatisticDetails?iID=@item.ImportId&&eID=@item.ExportId">Details</a></td>
+            </tr>
+            }
+            <!-- Thêm các hàng dữ liệu khác tại đây -->
+        </table>
+        }
+        @if (ViewBag.statisticDetails != null)
+        {
+              <table>
+                <tr>
+                <th>RiceName</th>
+                <th>Quantity</th>
+            </tr>
+                @foreach (var item in ViewBag.statisticDetails)
+                {
+            <tr>
+                        <td>@item.RiceName</td>
+                        <td>@item.Quantity</td>
+            </tr>
+            }
+            </table>
+        }
+    </div>
+</body>
+
+</html>

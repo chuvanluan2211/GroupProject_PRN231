@@ -19,24 +19,27 @@ namespace RiceManagement.Controllers
             _context = context;
         }
         [HttpGet("{month}/{year}")]
-        [Authorize(Policy = "AdminRolePolicy")]
+        //[Authorize(Policy = "AdminRolePolicy")]
         public ActionResult GetAll (string month,string year) {
+            int parsedMonth = int.Parse(month);
+            int parsedYear = int.Parse(year);
+
             var results = from import in _context.Imports
                           join exportDetail in _context.ExportDetails on import.ImportId equals exportDetail.ImportId
                           join export in _context.Exports on exportDetail.ExportId equals export.ExprotId
-                          where import.ImportDate.HasValue && export.ExportDate.HasValue &&
-                                import.ImportDate.Value.Month == 9 && export.ExportDate.Value.Year == 2023
+                          where export.ExportDate.Value.Month == parsedMonth
+                              && export.ExportDate.Value.Year == parsedYear
+                              && import.ImportDate.Value.Month == parsedMonth
+                              && import.ImportDate.Value.Year == parsedYear
                           select new Statistic
                           {
                               ImportId = import.ImportId,
                               ExportId = export.ExprotId,
                               Date = import.ImportDate.ToString(),
-                             ImportQuantity= import.Quantity,
-                             QuantityInStock= import.QuantityInStock,
-                            ExportQuantity=  export.Quantity
+                              ImportQuantity = import.Quantity,
+                              QuantityInStock = import.QuantityInStock,
+                              ExportQuantity = export.Quantity
                           };
-
-
 
             if (results == null)
             {
