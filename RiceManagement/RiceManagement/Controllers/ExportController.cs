@@ -40,7 +40,13 @@ namespace RiceManagement.Controllers
                 }).ToList();
             return Ok(getlist);
         }
-
+        [HttpGet("GetLast")]
+        public async Task<ActionResult<Export>> GetLast()
+        {
+            var getlist = _context.Exports.OrderByDescending(i => i.ExprotId).Take(1);
+                
+            return Ok(getlist);
+        }
         // POST api/<ExportController>
         [HttpPost]
         public async Task<IActionResult> Post( [FromBody] AddExportRequest export)
@@ -158,8 +164,8 @@ namespace RiceManagement.Controllers
             getExportDetail.Quantity = export.Quantity;
             getEx.Quantity = sum;
             getEx.ExportDate = export.ExportDate;
-            _context.Update(getExportDetail);
-            _context.Update(getEx);
+            _context.ExportDetails.Update(getExportDetail);
+            _context.Exports.Update(getEx);
             await _context.SaveChangesAsync();
             return StatusCode(200, "update thanh cong");
         }
@@ -167,7 +173,7 @@ namespace RiceManagement.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteExport(int id)
         {
-            var getEx = await _context.Exports.SingleAsync(i => i.ExprotId==id);
+            var getEx =  _context.Exports.SingleOrDefault(i => i.ExprotId==id);
             if(getEx == null)
             {
                 return BadRequest(" ko co export nay");
@@ -176,8 +182,8 @@ namespace RiceManagement.Controllers
             {
                 var getExportDetail =  _context.ExportDetails.Where(o => o.ExportId == id).ToList();
 
-                _context.ExportDetails.RemoveRange(getExportDetail);
                 _context.Exports.Remove(getEx);
+                _context.ExportDetails.RemoveRange(getExportDetail);
 
                 _context.SaveChanges();
 

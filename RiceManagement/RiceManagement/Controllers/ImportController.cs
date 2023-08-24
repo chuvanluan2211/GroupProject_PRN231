@@ -36,7 +36,13 @@ namespace RiceManagement.Controllers
                 }).ToList();
             return Ok(getlist);
         }
-        
+        [HttpGet("GetLast")]
+        public async Task<ActionResult<Import>> GetLast()
+        {
+            var getlist = _context.Imports.OrderByDescending(i => i.ImportId).Take(1);
+
+            return Ok(getlist);
+        }
 
         // POST api/<ImportController>
         [HttpPost]
@@ -47,7 +53,7 @@ namespace RiceManagement.Controllers
             {
                 ImportDate = import.ImportDate,
                 Quantity = 0,
-                QuantityInStock = import.QuantityInStock,
+                QuantityInStock = 0,
             };
             await _context.Imports.AddAsync(addImport);
             await _context.SaveChangesAsync();
@@ -68,6 +74,8 @@ namespace RiceManagement.Controllers
             };
             getRice.QuantityInStock += import.Quantity;
             getImport.Quantity += import.Quantity;
+            getImport.QuantityInStock += import.Quantity;
+
             _context.Rice.Update(getRice);
             _context.Imports.Update(getImport);
 
@@ -92,8 +100,8 @@ namespace RiceManagement.Controllers
             getImportDetail.Quantity = import.Quantity;
             getImport.Quantity = sum ;
             getImport.ImportDate = import.ImportDate;
-            _context.Update(getImport);
-            _context.Update(getImportDetail);
+            _context.Imports.Update(getImport);
+            _context.ImportRiceDetails.Update(getImportDetail);
             await _context.SaveChangesAsync();
             return StatusCode(200, "update thanh cong");
         }
@@ -101,7 +109,7 @@ namespace RiceManagement.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteImport(int id)
         {
-            var getEx = await _context.Imports.SingleAsync(i => i.ImportId == id);
+            var getEx =  _context.Imports.SingleOrDefault(i => i.ImportId == id);
             if (getEx == null)
             {
                 return BadRequest(" ko co export nay");
@@ -110,8 +118,8 @@ namespace RiceManagement.Controllers
             {
                 var getExportDetail = _context.ImportRiceDetails.Where(o => o.ImportId == id).ToList();
 
-                _context.ImportRiceDetails.RemoveRange(getExportDetail);
                 _context.Imports.Remove(getEx);
+                _context.ImportRiceDetails.RemoveRange(getExportDetail);
 
                 _context.SaveChanges();
 
